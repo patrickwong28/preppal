@@ -29,13 +29,16 @@ const IngredientForm = ({
   };
 
   const handleAddIngredient = () => {
+    if (inputValue.length === 0) return;
+
     setIngredients((prevIngredients) => [...prevIngredients, inputValue]);
     setInputValue("");
   };
 
   return (
     <div className="flex flex-col">
-      <div className="flex justify-center items-center gap-2">
+      <hr className="border border-gray-300" />
+      <div className="flex justify-center items-center gap-2 pt-8">
         <input
           className="w-full max-w-2xl border-2 border-gray-300 rounded-4xl outline-none p-4"
           value={inputValue}
