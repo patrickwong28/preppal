@@ -3,7 +3,7 @@
 import React from "react";
 import MealCard from "./MealCard";
 
-const MealContainer = () => {
+const MealContainer = ({ meals }: { meals: string[] }) => {
   return (
     <div className="grid grid-cols-4 place-items-center gap-8 mt-8 ">
       {[1, 2, 3, 4].map((id) => (

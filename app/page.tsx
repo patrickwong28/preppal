@@ -17,7 +17,7 @@ export default function Home() {
     <section className="w-full max-w-max mx-auto mt-16">
       <IngredientForm onGenerated={handleSetMeal} />
       {/* TODO: create meal container to display the meals */}
-      <MealContainer />
+      <MealContainer meals={meals} />
     </section>
   );
 }
