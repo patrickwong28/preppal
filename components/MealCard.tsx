@@ -15,7 +15,7 @@ const MealCard = () => {
         mozzarella and Gruyère, and finished with fresh chives for a rich,
         tangy, and deeply umami bite
       </p>
-      <button className="rounded-3xl self-end bg-blue-500 text-white mt-2 p-2">
+      <button className="rounded-3xl self-end bg-blue-500 text-white mt-2 p-3">
         Recipe
       </button>
     </div>

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import MealCard from "./MealCard";
 
 const IngredientForm = ({
   onGenerated,
@@ -13,7 +12,7 @@ const IngredientForm = ({
 
   // Create a Meal interface that stores information about meals then create a meals array state variable to map over to display information in the form of cards
 
-  const handleSubmit = async () => {
+  const handleGenerate = async () => {
     const response = await fetch("/api/generate", {
       method: "POST",
       headers: {
@@ -22,6 +21,8 @@ const IngredientForm = ({
       // Does an array need to be wrapped in curly braces like an object, also do I need to assign a field name for the data im attaching to the body
       body: JSON.stringify(ingredients),
     });
+
+    onGenerated([]);
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,7 +63,7 @@ const IngredientForm = ({
           ))}
       </div>
 
-      {/* OnClick should call the handleSubmit function that makes a POST request to recipe API route */}
+      {/* OnClick should call the handleGenerate function that makes a POST request to recipe API route */}
       <button
         className="bg-text text-background rounded-4xl disabled:hidden mt-8 mx-auto p-4"
         disabled={ingredients.length === 0}
