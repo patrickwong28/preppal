@@ -19,7 +19,7 @@ const IngredientForm = ({
         "Content-Type": "application/json",
       },
       // Does an array need to be wrapped in curly braces like an object, also do I need to assign a field name for the data im attaching to the body
-      body: JSON.stringify(ingredients),
+      body: JSON.stringify({ ingredients: ingredients }),
     });
 
     onGenerated([]);
@@ -67,6 +67,7 @@ const IngredientForm = ({
       <button
         className="bg-text text-background rounded-4xl disabled:hidden mt-8 mx-auto p-4"
         disabled={ingredients.length === 0}
+        onClick={handleGenerate}
       >
         Generate
       </button>
