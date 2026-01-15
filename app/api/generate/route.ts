@@ -2,23 +2,32 @@ import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 
 const systemPrompt = `
-Provide 10 meals. Do not create duplicated meals in the list.
+You are generating meal ideas based on ingredients provided by the user.
 
-Here's the information I want you to provide for each of the meals:
+Rules:
+- Generate exactly 10 meals.
+- All meals must be unique in name and concept.
+- Each meal must include all user-provided ingredients.
+- You may add additional common ingredients if necessary for a complete recipe and to provide diversity to the list of meals.
+- Do not include cooking steps or instructions.
+- Do not include markdown, commentary, or explanations.
+- Return valid JSON only.
+- Keep descriptions under 250 characters.
 
-Meal Name: Name of the meal.
-Description: A brief and descriptive overview of the meal.
-Number of Calories: The number of calories for one serving.
-Recipe: Provide an accurate recipe containing a list of ingredients that's required to recreate the meal, including standard and accurate measurements.
+For each meal, provide:
+- title: Name of the meal.
+- description: A breief, clear overview of the meal.
+- calories: An estimated number of calories per serving (integer).
+- recipe: An array of strings where each string is a single ingredient with a standard measurement.
 
-Return the information in the following JSON format where "meals" is an array of objects and "recipe" is an array of strings containing the ingredients with its associated measurement:
+Output format:
 {
   "meals": [
     {
       "title": string,
-      "calories": number,
       "description": string,
-      "recipe": string[],
+      "calories": number,
+      "recipe": string[]
     }
   ]
 }
@@ -30,6 +39,9 @@ export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
     const ingredients: string[] = data.ingredients;
+    const userPrompt = `Ingredients provided by the user: ${ingredients.join(
+      ", "
+    )}`;
 
     const response = await client.responses.create({
       model: "gpt-5-nano",
@@ -40,22 +52,34 @@ export async function POST(req: NextRequest) {
           strict: true,
           schema: {
             type: "object",
-            required: ["title", "calories", "description", "recipe"],
-            additonalProperties: false,
+            required: ["meals"],
+            additionalProperties: false,
             properties: {
-              title: {
-                type: "string",
-              },
-              calories: {
-                type: "number",
-              },
-              description: {
-                type: "string",
-              },
-              recipe: {
+              meals: {
                 type: "array",
+                minItems: 10,
+                maxItems: 10,
                 items: {
-                  type: "string",
+                  type: "object",
+                  required: ["title", "calories", "description", "recipe"],
+                  additionalProperties: false,
+                  properties: {
+                    title: {
+                      type: "string",
+                    },
+                    description: {
+                      type: "string",
+                    },
+                    calories: {
+                      type: "number",
+                    },
+                    recipe: {
+                      type: "array",
+                      items: {
+                        type: "string",
+                      },
+                    },
+                  },
                 },
               },
             },
@@ -69,15 +93,30 @@ export async function POST(req: NextRequest) {
         },
         {
           role: "user",
-          content: "ingredients from user input goes here",
+          content: userPrompt,
         },
       ],
     });
+
+    console.log("Response:", response.output_text);
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Recipe Creation Successful",
+        data: ingredients,
+      },
+      { status: 201 }
+    );
   } catch (error) {
     console.error(error);
-    return NextResponse.json({
-      message: "Recipe Creaton Failed",
-      error: error instanceof Error ? error.message : "Unknown",
-    });
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Recipe Creaton Failed",
+        error: error instanceof Error ? error.message : "Unknown",
+      },
+      { status: 500 }
+    );
   }
 }
