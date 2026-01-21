@@ -7,7 +7,7 @@ const systemPrompt = `
 You are generating meal ideas based on ingredients provided by the user.
 
 Rules:
-- Generate exactly 10 meals.
+- Generate exactly 12 meals.
 - All meals must be unique in name and concept.
 - Each meal must include all user-provided ingredients.
 - You may add additional common ingredients if necessary for a complete recipe and to provide diversity to the list of meals.
@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
     const data = await req.json();
     const ingredients: string[] = data.ingredients;
     const userPrompt = `Ingredients provided by the user: ${ingredients.join(
-      ", ",
+      ", "
     )}`;
 
     const response = await client.responses.create({
@@ -107,9 +107,11 @@ export async function POST(req: NextRequest) {
       responseJSON.meals.map(async (meal: Meal) => {
         const imageURL = await fetchMealImage(meal.name);
 
-        return { ...meal, image: imageURL };
-      }),
+        if (imageURL) return { ...meal, image: imageURL };
+      })
     );
+
+    console.log("Meals", mealsWithImages);
 
     return NextResponse.json(
       {
@@ -117,7 +119,7 @@ export async function POST(req: NextRequest) {
         message: "Recipe Creation Successful",
         data: mealsWithImages,
       },
-      { status: 201 },
+      { status: 201 }
     );
   } catch (error) {
     console.error(error);
@@ -127,7 +129,7 @@ export async function POST(req: NextRequest) {
         message: "Recipe Creaton Failed",
         error: error instanceof Error ? error.message : "Unknown",
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

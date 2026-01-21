@@ -2,12 +2,13 @@
 
 import React from "react";
 import MealCard from "./MealCard";
+import { Meal } from "@/utils/types";
 
-const MealContainer = ({ meals }: { meals: string[] }) => {
+const MealContainer = ({ meals }: { meals: Meal[] }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 place-items-center gap-8 mt-8 ">
-      {[1, 2, 3, 4].map((id) => (
-        <MealCard key={id} />
+      {meals.map((meal, index) => (
+        <MealCard key={index} meal={meal} />
       ))}
     </div>
   );
