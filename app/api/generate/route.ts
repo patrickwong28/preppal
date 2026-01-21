@@ -1,3 +1,5 @@
+import { fetchMealImage } from "@/lib/pexels";
+import { Meal } from "@/utils/types";
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 
@@ -15,7 +17,7 @@ Rules:
 - Keep descriptions under 250 characters.
 
 For each meal, provide:
-- title: Name of the meal.
+- name: Name of the meal.
 - description: A breief, clear overview of the meal.
 - calories: An estimated number of calories per serving (integer).
 - recipe: An array of strings where each string is a single ingredient with a standard measurement.
@@ -24,7 +26,7 @@ Output format:
 {
   "meals": [
     {
-      "title": string,
+      "name": string,
       "description": string,
       "calories": number,
       "recipe": string[]
@@ -40,7 +42,7 @@ export async function POST(req: NextRequest) {
     const data = await req.json();
     const ingredients: string[] = data.ingredients;
     const userPrompt = `Ingredients provided by the user: ${ingredients.join(
-      ", "
+      ", ",
     )}`;
 
     const response = await client.responses.create({
@@ -61,10 +63,10 @@ export async function POST(req: NextRequest) {
                 maxItems: 10,
                 items: {
                   type: "object",
-                  required: ["title", "calories", "description", "recipe"],
+                  required: ["name", "calories", "description", "recipe"],
                   additionalProperties: false,
                   properties: {
-                    title: {
+                    name: {
                       type: "string",
                     },
                     description: {
@@ -100,13 +102,22 @@ export async function POST(req: NextRequest) {
 
     console.log("Response:", response.output_text);
 
+    const responseJSON = JSON.parse(response.output_text);
+    const mealsWithImages = await Promise.all(
+      responseJSON.meals.map(async (meal: Meal) => {
+        const imageURL = await fetchMealImage(meal.name);
+
+        return { ...meal, image: imageURL };
+      }),
+    );
+
     return NextResponse.json(
       {
         success: true,
         message: "Recipe Creation Successful",
-        data: ingredients,
+        data: mealsWithImages,
       },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error) {
     console.error(error);
@@ -116,7 +127,7 @@ export async function POST(req: NextRequest) {
         message: "Recipe Creaton Failed",
         error: error instanceof Error ? error.message : "Unknown",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
