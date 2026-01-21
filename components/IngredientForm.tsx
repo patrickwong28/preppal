@@ -23,6 +23,7 @@ const IngredientForm = ({
     });
 
     onGenerated([]);
+    setIngredients([]);
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
