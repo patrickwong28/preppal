@@ -3,5 +3,5 @@ export interface Meal {
   description: string;
   calories: number;
   ingredients: string[];
-  image?: string;
+  image: string;
 }

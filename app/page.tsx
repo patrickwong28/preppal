@@ -2,14 +2,13 @@
 
 import IngredientForm from "@/components/IngredientForm";
 import MealContainer from "@/components/MealContainer";
+import { Meal } from "@/utils/types";
 import { useState } from "react";
-// import Meal from "../utils/types.ts";
 
 export default function Home() {
-  // TODO: change the type for the array storing string to array storing Meal objects
-  const [meals, setMeals] = useState<string[]>([]);
+  const [meals, setMeals] = useState<Meal[]>([]);
 
-  const handleSetMeal = (newMeals: string[]) => {
+  const handleSetMeal = (newMeals: Meal[]) => {
     setMeals(newMeals);
   };
 

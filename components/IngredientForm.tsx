@@ -1,14 +1,16 @@
 "use client";
 
+import { Meal } from "@/utils/types";
 import { useState } from "react";
 
 const IngredientForm = ({
   onGenerated,
 }: {
-  onGenerated: (meals: string[]) => void;
+  onGenerated: (meals: Meal[]) => void;
 }) => {
   const [ingredients, setIngredients] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
+  const [error, setError] = useState<boolean>(false);
 
   // Create a Meal interface that stores information about meals then create a meals array state variable to map over to display information in the form of cards
 
@@ -22,7 +24,14 @@ const IngredientForm = ({
       body: JSON.stringify({ ingredients: ingredients }),
     });
 
-    onGenerated([]);
+    // TODO: Render an error message on the page if the fetch request failed
+    if (!response.ok) setError(true);
+
+    const data = await response.json();
+
+    console.log("Response to Client", data);
+
+    onGenerated(data.data);
     setIngredients([]);
   };
 
