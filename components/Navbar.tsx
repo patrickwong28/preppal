@@ -1,3 +1,4 @@
+import { SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import React from "react";
 
@@ -24,7 +25,15 @@ const Navbar = () => {
             </li>
           </ul>
         </li>
-        <li>Register</li>
+        <li>
+          <SignedOut>
+            <SignInButton>
+              <button>Sign In</button>
+            </SignInButton>
+          </SignedOut>
+
+          <UserButton />
+        </li>
       </ul>
     </nav>
   );
