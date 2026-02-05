@@ -15,7 +15,7 @@ const IngredientForm = ({
   // Create a Meal interface that stores information about meals then create a meals array state variable to map over to display information in the form of cards
 
   const handleGenerate = async () => {
-    const response = await fetch("/api/generate", {
+    const response = await fetch("/api/recipes/generate", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

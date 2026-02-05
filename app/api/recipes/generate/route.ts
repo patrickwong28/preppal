@@ -1,5 +1,6 @@
 import { fetchMealImage } from "@/lib/pexels";
 import { Meal } from "@/utils/types";
+import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 
@@ -39,10 +40,12 @@ export async function POST(req: NextRequest) {
   const client = new OpenAI();
 
   try {
+    const { userId } = await auth();
+    console.log("UserId", userId);
     const data = await req.json();
     const ingredients: string[] = data.ingredients;
     const userPrompt = `Ingredients provided by the user: ${ingredients.join(
-      ", "
+      ", ",
     )}`;
 
     const response = await client.responses.create({
@@ -108,7 +111,7 @@ export async function POST(req: NextRequest) {
         const imageURL = await fetchMealImage(meal.name);
 
         if (imageURL) return { ...meal, image: imageURL };
-      })
+      }),
     );
 
     console.log("Meals", mealsWithImages);
@@ -119,7 +122,7 @@ export async function POST(req: NextRequest) {
         message: "Recipe Creation Successful",
         data: mealsWithImages,
       },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error) {
     console.error(error);
@@ -129,7 +132,7 @@ export async function POST(req: NextRequest) {
         message: "Recipe Creaton Failed",
         error: error instanceof Error ? error.message : "Unknown",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
