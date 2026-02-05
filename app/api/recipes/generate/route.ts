@@ -1,5 +1,6 @@
 import { fetchMealImage } from "@/lib/pexels";
 import { Meal } from "@/utils/types";
+import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 
@@ -39,6 +40,8 @@ export async function POST(req: NextRequest) {
   const client = new OpenAI();
 
   try {
+    const { userId } = await auth();
+    console.log("UserId", userId);
     const data = await req.json();
     const ingredients: string[] = data.ingredients;
     const userPrompt = `Ingredients provided by the user: ${ingredients.join(
@@ -105,7 +108,7 @@ export async function POST(req: NextRequest) {
       responseJSON.meals.map(async (meal: Meal) => {
         const imageURL = await fetchMealImage(meal.name);
 
-        return { ...meal, image: imageURL };
+        if (imageURL) return { ...meal, image: imageURL };
       }),
     );
 
