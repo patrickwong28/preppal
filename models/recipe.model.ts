@@ -1,13 +1,12 @@
 import mongoose, { Types } from "mongoose";
-import { UserInterface } from "./user.model";
 
 interface RecipeInterface extends mongoose.Document {
   name: string;
   description: string;
   calories: number;
-  ingredients: string[];
+  recipe: string[];
   image: string;
-  user: Types.ObjectId | UserInterface;
+  clerkUserId: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -26,7 +25,7 @@ const recipeSchema = new mongoose.Schema<RecipeInterface>(
       type: Number,
       required: true,
     },
-    ingredients: {
+    recipe: {
       type: [String],
       required: true,
     },
@@ -34,9 +33,8 @@ const recipeSchema = new mongoose.Schema<RecipeInterface>(
       type: String,
       required: true,
     },
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+    clerkUserId: {
+      type: String,
       required: true,
       index: true,
     },

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-export interface UserInterface extends mongoose.Document {
+interface UserInterface extends mongoose.Document {
   clerkUserId: string;
   email: string;
   createdAt: Date;
