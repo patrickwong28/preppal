@@ -40,8 +40,6 @@ export async function POST(req: NextRequest) {
   const client = new OpenAI();
 
   try {
-    const { userId } = await auth();
-    console.log("UserId", userId);
     const data = await req.json();
     const ingredients: string[] = data.ingredients;
     const userPrompt = `Ingredients provided by the user: ${ingredients.join(
