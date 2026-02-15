@@ -32,7 +32,7 @@ const MealCard = ({ meal, showSaveButton }: MealCardProp) => {
       <p className="text-sm mt-2">{description}</p>
       {showSaveButton && (
         <BookmarkIcon
-          className="w-14 h-14 self-end mt-auto p-3"
+          className="w-14, h-14 self-end mt-auto p-3"
           filled={true}
           onClick={handleSave}
         />

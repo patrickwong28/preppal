@@ -1,5 +1,6 @@
 "use client";
 
+import Hero from "@/components/Hero";
 import IngredientForm from "@/components/IngredientForm";
 import MealContainer from "@/components/MealContainer";
 import { Meal } from "@/utils/types";
@@ -13,10 +14,10 @@ export default function Home() {
   };
 
   return (
-    <section className="w-full max-w-max mx-auto mt-16">
+    <main className="w-full max-w-max mx-auto mt-16">
+      <Hero />
       <IngredientForm onGenerated={handleSetMeal} />
-      {/* TODO: create meal container to display the meals */}
       <MealContainer meals={meals} />
-    </section>
+    </main>
   );
 }
