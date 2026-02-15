@@ -1,13 +1,14 @@
 import { Meal } from "@/utils/types";
 import { useUser } from "@clerk/nextjs";
 import Image from "next/image";
-import React from "react";
+import BookmarkIcon from "./icons/BookmarkIcon";
 
 interface MealCardProp {
   meal: Meal;
+  showSaveButton: boolean;
 }
 
-const MealCard = ({ meal }: MealCardProp) => {
+const MealCard = ({ meal, showSaveButton }: MealCardProp) => {
   const { name, description, calories, recipe, image } = meal;
   const { isLoaded, isSignedIn, user } = useUser();
 
@@ -29,12 +30,18 @@ const MealCard = ({ meal }: MealCardProp) => {
       <h2 className="text-lg font-semibold mt-3">{name}</h2>
       <p className="text-xs text-gray-500 mt-1">{calories} calories</p>
       <p className="text-sm mt-2">{description}</p>
-      <button
-        className="rounded-3xl self-end bg-blue-500 text-white mt-2 p-3"
-        onClick={handleSave}
-      >
-        Save
-      </button>
+      {showSaveButton && (
+        <BookmarkIcon
+          className="w-14 h-14 self-end mt-auto p-3"
+          filled={true}
+          onClick={handleSave}
+        />
+        // <button
+        //   className="rounded-3xl self-end bg-blue-500 text-white mt-2 p-3"
+        //   onClick={handleSave}
+        // >
+        // </button>
+      )}
     </div>
   );
 };
