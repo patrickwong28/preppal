@@ -3,21 +3,15 @@
 :root {
   --background-color: rgb(250, 245, 245);
   --text-color: rgb(46, 46, 46);
+  --font-funnel-sans: "Funnel Sans", sans-serif;
 }
 
 @theme {
   --color-background: var(--background-color);
   --color-text: var(--text-color);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-funnel-sans);
   --font-mono: var(--font-geist-mono);
   --container-max: 95%;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background-color: rgb(250, 245, 245);
-    --text-color: rgb(46, 46, 46);
-  }
 }
 
 @media (min-width: 640px) {
@@ -48,12 +42,6 @@
   :root {
     --container-max: 1250px;
   }
-}
-
-body {
-  background: var(--background-color);
-  color: var(--text-color);
-  font-family: Arial, Helvetica, sans-serif;
 }
 
 /* .dotted-bg {

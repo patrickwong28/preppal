@@ -1,10 +1,9 @@
 import { SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
-import React from "react";
 
 const Navbar = () => {
   return (
-    <nav className="w-full max-w-max mx-auto mt-16 mb-8">
+    <nav className="text-lg w-full max-w-max mx-auto mt-16 mb-8">
       <ul className="flex justify-between items-center">
         <li>
           <Link href="/">PrepPal</Link>

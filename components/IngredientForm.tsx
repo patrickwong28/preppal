@@ -70,39 +70,41 @@ const IngredientForm = ({
         </button>
       </div>
 
-      <div className="w-full max-w-2xl mt-8 mx-auto">
-        <h2 className="text-2xl">Ingredients</h2>
+      {ingredients.length > 0 && (
+        <div className="w-full max-w-2xl mt-8 mx-auto">
+          <h2 className="text-2xl">Ingredients</h2>
 
-        <div className="flex flex-col justify-center border border-gray-300 mt-4">
-          {ingredients.length > 0 &&
-            ingredients.map((ingredient, index) => (
-              <div
-                className="flex justify-between items-center border border-gray-300 p-3"
-                key={index}
-              >
-                {ingredient}
-                <CloseIcon
-                  className="w-8 h-8 hover:text-white hover:bg-text rounded-lg p-2"
-                  onClick={() => handleRemoveIngredient(index)}
-                />
-                {/* <button
+          <div className="flex flex-col justify-center border border-gray-300 mt-4">
+            {ingredients.length > 0 &&
+              ingredients.map((ingredient, index) => (
+                <div
+                  className="flex justify-between items-center border border-gray-300 p-3"
+                  key={index}
+                >
+                  {ingredient}
+                  <CloseIcon
+                    className="w-8 h-8 hover:text-white hover:bg-text rounded-lg p-2"
+                    onClick={() => handleRemoveIngredient(index)}
+                  />
+                  {/* <button
                   className="bg-black text-white rounded-4xl p-2"
                   onClick={() => handleRemoveIngredient(index)}
                 >
                   Remove
                 </button> */}
-              </div>
-            ))}
-        </div>
+                </div>
+              ))}
+          </div>
 
-        <button
-          className="w-full bg-text text-background rounded-4xl disabled:hidden mt-8 p-2"
-          disabled={ingredients.length === 0}
-          onClick={handleGenerate}
-        >
-          Generate
-        </button>
-      </div>
+          <button
+            className="w-full bg-text text-background rounded-4xl disabled:hidden mt-8 p-2"
+            disabled={ingredients.length === 0}
+            onClick={handleGenerate}
+          >
+            Generate
+          </button>
+        </div>
+      )}
     </section>
   );
 };
