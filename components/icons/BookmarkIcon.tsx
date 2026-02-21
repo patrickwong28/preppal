@@ -14,13 +14,13 @@ export default function BookmarkIcon({
       viewBox="0 0 1920 1920"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
-      fill={filled ? "currentColor" : "none"}
-      stroke="currentColor"
       onClick={onClick}
     >
       <path
-        d="m960.481 1412.11 511.758 307.054V170.586c0-31.274-25.588-56.862-56.862-56.862H505.586c-31.274 0-56.862 25.588-56.862 56.862v1548.578l511.757-307.055ZM1585.963 1920 960.48 1544.711 335 1920V170.586C335 76.536 411.536 0 505.586 0h909.79c94.05 0 170.587 76.536 170.587 170.586V1920Z"
-        fillRule="evenodd"
+        d="M505.586 0C411.536 0 335 76.536 335 170.586V1920l625.48-375.289L1585.963 1920V170.586C1585.963 76.536 1509.427 0 1415.377 0H505.586Z"
+        fill={filled ? "currentColor" : "none"}
+        stroke="gray"
+        strokeWidth={60}
       />
     </svg>
   );

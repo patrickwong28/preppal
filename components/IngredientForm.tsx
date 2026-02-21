@@ -63,7 +63,7 @@ const IngredientForm = ({
         />
 
         <button
-          className="bg-text text-background rounded-4xl px-4 py-2"
+          className="bg-text text-background rounded-4xl cursor-pointer px-4 py-2"
           onClick={handleAddIngredient}
         >
           Add
@@ -83,21 +83,15 @@ const IngredientForm = ({
                 >
                   {ingredient}
                   <CloseIcon
-                    className="w-8 h-8 hover:text-white hover:bg-text rounded-lg p-2"
+                    className="w-8 h-8 hover:text-white hover:bg-text transition-color duration-150 rounded-lg cursor-pointer p-2"
                     onClick={() => handleRemoveIngredient(index)}
                   />
-                  {/* <button
-                  className="bg-black text-white rounded-4xl p-2"
-                  onClick={() => handleRemoveIngredient(index)}
-                >
-                  Remove
-                </button> */}
                 </div>
               ))}
           </div>
 
           <button
-            className="w-full bg-text text-background rounded-4xl disabled:hidden mt-8 p-2"
+            className="w-full bg-text text-background rounded-4xl disabled:hidden cursor-pointer mt-8 p-2"
             disabled={ingredients.length === 0}
             onClick={handleGenerate}
           >

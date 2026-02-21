@@ -32,15 +32,10 @@ const MealCard = ({ meal, showSaveButton }: MealCardProp) => {
       <p className="text-sm mt-2">{description}</p>
       {showSaveButton && (
         <BookmarkIcon
-          className="w-14, h-14 self-end mt-auto p-3"
+          className="w-10 h-10 self-end text-transparent hover:text-yellow-500 transition-color duration-200 rounded-lg mt-auto p-1"
           filled={true}
           onClick={handleSave}
         />
-        // <button
-        //   className="rounded-3xl self-end bg-blue-500 text-white mt-2 p-3"
-        //   onClick={handleSave}
-        // >
-        // </button>
       )}
     </div>
   );

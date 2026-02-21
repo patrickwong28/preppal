@@ -14,7 +14,7 @@ export default function Home() {
   };
 
   return (
-    <main className="w-full max-w-max mx-auto mt-16">
+    <main className="w-full h-full max-w-max min-h-screen mx-auto mt-16">
       <Hero />
       <IngredientForm onGenerated={handleSetMeal} />
       <MealContainer meals={meals} />
