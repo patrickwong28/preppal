@@ -11,9 +11,11 @@ const IngredientForm = ({
 }) => {
   const [ingredients, setIngredients] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
 
   const handleGenerate = async () => {
+    setLoading(true);
     const response = await fetch("/api/recipes/generate", {
       method: "POST",
       headers: {
@@ -31,6 +33,7 @@ const IngredientForm = ({
 
     onGenerated(data.data);
     setIngredients([]);
+    setLoading(false);
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {

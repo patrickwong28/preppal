@@ -14,8 +14,10 @@ Rules:
 - You may add additional common ingredients if necessary for a complete recipe and to provide diversity to the list of meals.
 - Do not include cooking steps or instructions.
 - Do not include markdown, commentary, or explanations.
-- Return valid JSON only.
 - Keep descriptions under 250 characters.
+- Output each meal as an independent JSON object wrapped between <MEAL> and </MEAL>.
+- Do NOT wrap meals in an array.
+- Do NOT output a top-level JSON object.
 
 For each meal, provide:
 - name: Name of the meal.
@@ -23,17 +25,15 @@ For each meal, provide:
 - calories: An estimated number of calories per serving (integer).
 - recipe: An array of strings where each string is a single ingredient with a standard measurement.
 
-Output format:
+Output format for EACH meal:
+<Meal>
 {
-  "meals": [
-    {
-      "name": string,
-      "description": string,
-      "calories": number,
-      "recipe": string[]
-    }
-  ]
+  "name": string,
+  "description": string,
+  "calories": number,
+  "recipe": string[]
 }
+</Meal>
 `;
 
 export async function POST(req: NextRequest) {
