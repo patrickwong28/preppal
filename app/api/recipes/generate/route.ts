@@ -1,6 +1,4 @@
 import { fetchMealImage } from "@/lib/pexels";
-import { Meal } from "@/utils/types";
-import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 
@@ -14,8 +12,10 @@ Rules:
 - You may add additional common ingredients if necessary for a complete recipe and to provide diversity to the list of meals.
 - Do not include cooking steps or instructions.
 - Do not include markdown, commentary, or explanations.
-- Return valid JSON only.
 - Keep descriptions under 250 characters.
+- Output each meal as an independent JSON object wrapped between <MEAL> and </MEAL>.
+- Do NOT wrap meals in an array.
+- Do NOT output a top-level JSON object.
 
 For each meal, provide:
 - name: Name of the meal.
@@ -23,17 +23,15 @@ For each meal, provide:
 - calories: An estimated number of calories per serving (integer).
 - recipe: An array of strings where each string is a single ingredient with a standard measurement.
 
-Output format:
+Output format for EACH meal:
+<Meal>
 {
-  "meals": [
-    {
-      "name": string,
-      "description": string,
-      "calories": number,
-      "recipe": string[]
-    }
-  ]
+  "name": string,
+  "description": string,
+  "calories": number,
+  "recipe": string[]
 }
+</Meal>
 `;
 
 export async function POST(req: NextRequest) {
@@ -46,49 +44,9 @@ export async function POST(req: NextRequest) {
       ", ",
     )}`;
 
-    const response = await client.responses.create({
+    const stream = await client.responses.create({
       model: "gpt-5-nano",
-      text: {
-        format: {
-          type: "json_schema",
-          name: "meals",
-          strict: true,
-          schema: {
-            type: "object",
-            required: ["meals"],
-            additionalProperties: false,
-            properties: {
-              meals: {
-                type: "array",
-                minItems: 10,
-                maxItems: 10,
-                items: {
-                  type: "object",
-                  required: ["name", "calories", "description", "recipe"],
-                  additionalProperties: false,
-                  properties: {
-                    name: {
-                      type: "string",
-                    },
-                    description: {
-                      type: "string",
-                    },
-                    calories: {
-                      type: "number",
-                    },
-                    recipe: {
-                      type: "array",
-                      items: {
-                        type: "string",
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
+      stream: true,
       input: [
         {
           role: "developer",
@@ -101,23 +59,42 @@ export async function POST(req: NextRequest) {
       ],
     });
 
-    const responseJSON = JSON.parse(response.output_text);
-    const mealsWithImages = await Promise.all(
-      responseJSON.meals.map(async (meal: Meal) => {
-        const imageURL = await fetchMealImage(meal.name);
+    const encoder = new TextEncoder();
+    const readableStream = new ReadableStream({
+      async start(controller) {
+        let buffer = "";
 
-        if (imageURL) return { ...meal, image: imageURL };
-      }),
-    );
+        for await (const event of stream) {
+          if (event.type === "response.output_text.delta") {
+            buffer += event.delta;
 
-    return NextResponse.json(
-      {
-        success: true,
-        message: "Recipe Creation Successful",
-        data: mealsWithImages,
+            while (buffer.includes("</MEAL>")) {
+              const openTag = "<MEAL>";
+              const closeTag = "</MEAL>";
+
+              // TODO: consider changing the name of variables for meal and mealJSON
+              const startIndex = buffer.indexOf(openTag) + openTag.length;
+              const endIndex = buffer.indexOf(closeTag);
+              const meal = buffer.substring(startIndex, endIndex);
+              const mealJSON = JSON.parse(meal);
+              const imageURL = await fetchMealImage(mealJSON.name);
+              const mealWithImage = { ...mealJSON, image: imageURL };
+
+              buffer = buffer.substring(endIndex + closeTag.length);
+              controller.enqueue(encoder.encode(JSON.stringify(mealWithImage)));
+            }
+          }
+        }
+        controller.close();
       },
-      { status: 201 },
-    );
+    });
+
+    return new Response(readableStream, {
+      headers: {
+        "Content-Type": "text/plain; charset=utf-8",
+      },
+      status: 201,
+    });
   } catch (error) {
     console.error(error);
     return NextResponse.json(

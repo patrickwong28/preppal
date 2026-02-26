@@ -6,14 +6,19 @@ import CloseIcon from "./icons/CloseIcon";
 
 const IngredientForm = ({
   onGenerated,
+  onReset,
 }: {
-  onGenerated: (meals: Meal[]) => void;
+  onGenerated: (meals: Meal) => void;
+  onReset: () => void;
 }) => {
   const [ingredients, setIngredients] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
 
   const handleGenerate = async () => {
+    onReset();
+    setLoading(true);
     const response = await fetch("/api/recipes/generate", {
       method: "POST",
       headers: {
@@ -22,15 +27,28 @@ const IngredientForm = ({
       body: JSON.stringify({ ingredients: ingredients }),
     });
 
-    // TODO: Render an error message on the page if the fetch request failed
-    if (!response.ok) setError(true);
+    // // TODO: Render an error message on the page if the fetch request failed
+    if (!response.ok) {
+      setError(true);
+      setLoading(false);
+      return;
+    }
 
-    const data = await response.json();
+    const reader = response.body!.getReader();
+    const decoder = new TextDecoder();
 
-    console.log("Response to Client", data);
+    while (true) {
+      const { value, done } = await reader.read();
 
-    onGenerated(data.data);
+      if (done) break;
+
+      const decodedMeal = decoder.decode(value);
+      const meal = JSON.parse(decodedMeal);
+      onGenerated(meal);
+    }
+
     setIngredients([]);
+    setLoading(false);
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -97,6 +115,8 @@ const IngredientForm = ({
           >
             Generate
           </button>
+
+          {loading ? "Loading..." : ""}
         </div>
       )}
     </section>
