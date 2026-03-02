@@ -34,7 +34,7 @@ const StoredMealsPage = () => {
 
   return (
     <main className="w-full max-w-max mx-auto mt-16">
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 items-stretch gap-8 mt-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 items-stretch justify-items-center gap-8 mt-8">
         {storedMeals.map((meal, index) => (
           <motion.div
             key={meal.name}
