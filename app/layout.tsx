@@ -34,7 +34,7 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body
-          className={`${funnelSans.variable} ${geistSans.variable} ${geistMono.variable} antialiased bg-background text-text`}
+          className={`${funnelSans.variable} ${geistSans.variable} ${geistMono.variable} antialiased bg-linear-to-br from-sky-100 via-orange-100 to-purple-100 text-text`}
         >
           <Navbar />
           {children}

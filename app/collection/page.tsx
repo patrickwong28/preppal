@@ -1,9 +1,10 @@
 "use client";
 
+import { motion } from "framer-motion";
 import MealCard from "@/components/MealCard";
 import { Meal } from "@/utils/types";
 import { useUser } from "@clerk/nextjs";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 const StoredMealsPage = () => {
   const { isLoaded, isSignedIn, user } = useUser();
@@ -33,9 +34,18 @@ const StoredMealsPage = () => {
 
   return (
     <main className="w-full max-w-max mx-auto mt-16">
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 place-items-center gap-8 mt-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 items-stretch gap-8 mt-8">
         {storedMeals.map((meal, index) => (
-          <MealCard key={index} meal={meal} showSaveButton={false} />
+          <motion.div
+            key={meal.name}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4 }}
+            layout
+          >
+            <MealCard key={index} meal={meal} showSaveButton={false} />
+          </motion.div>
         ))}
       </div>
     </main>

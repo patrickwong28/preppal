@@ -23,7 +23,7 @@ const MealCard = ({ meal, showSaveButton }: MealCardProp) => {
   };
 
   return (
-    <div className="flex flex-col w-full h-full max-w-sm p-4 border-2 border-gray-300 rounded-2xl">
+    <div className="flex flex-col w-full h-full max-w-sm bg-gray-50 shadow-md rounded-2xl p-4">
       <div className="relative aspect-video w-full">
         <Image className="object-cover" src={image} alt="pizza" fill />
       </div>
