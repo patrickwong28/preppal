@@ -1,7 +1,10 @@
-import React from "react";
-
 const Footer = () => {
-  return <footer className="w-full max-w-max mx-auto">Footer</footer>;
+  return (
+    <footer className="w-full max-w-max mx-auto mt-8">
+      <hr />
+      <div className="py-8">© PrepPal</div>
+    </footer>
+  );
 };
 
 export default Footer;

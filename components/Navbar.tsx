@@ -10,16 +10,16 @@ const Navbar = () => {
         </li>
         <li>
           <ul className="flex justify-center items-center gap-6">
-            <li>
+            <li className="hover:bg-gray-200 transition-color duration-300 rounded-3xl p-2">
               <Link href="/">Home</Link>
             </li>
-            <li>
+            <li className="hover:bg-gray-200 transition-color duration-300 rounded-3xl p-2">
               <Link href="/collection">Collection</Link>
             </li>
-            <li>
+            <li className="hover:bg-gray-200 transition-color duration-300 rounded-3xl p-2">
               <Link href="/">About</Link>
             </li>
-            <li>
+            <li className="hover:bg-gray-200 transition-color duration-300 rounded-3xl p-2">
               <Link href="/">Donate</Link>
             </li>
           </ul>
@@ -27,7 +27,9 @@ const Navbar = () => {
         <li>
           <SignedOut>
             <SignInButton>
-              <button>Sign In</button>
+              <button className="text-md bg-text text-background hover:bg-stone-700 transition-color duration-200 rounded-lg px-2 py-1">
+                Sign In
+              </button>
             </SignInButton>
           </SignedOut>
 

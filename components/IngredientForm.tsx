@@ -72,16 +72,22 @@ const IngredientForm = ({
   return (
     <section className="flex flex-col">
       <div className="flex justify-center items-center gap-2 pt-8">
-        <input
-          className="w-full max-w-2xl border-2 border-gray-300 rounded-4xl outline-none px-4 py-2"
-          value={inputValue}
-          onChange={handleInputChange}
-          placeholder="Ingredients go here"
-          id="form"
-        />
+        <div className="group relative w-full max-w-2xl rounded-4xl p-0.75">
+          <div
+            className="absolute inset-0 rounded-4xl bg-linear-to-r from-purple-200 via-orange-200 to-purple-200 bg-size-[300%_100%] 
+            animate-[gradientMove_3s_linear_infinite] opacity-0 transition-opacity duration-200 group-focus-within:opacity-100"
+          />
 
+          <input
+            className="relative z-10 w-full rounded-4xl bg-white shadow-md focus:shadow-none px-4 py-2 outline-none"
+            value={inputValue}
+            onChange={handleInputChange}
+            placeholder="Ingredients go here"
+            id="form"
+          />
+        </div>
         <button
-          className="bg-text text-background rounded-4xl cursor-pointer px-4 py-2"
+          className="bg-text text-background hover:bg-stone-700 transition-color duration-150 rounded-4xl cursor-pointer px-4 py-2"
           onClick={handleAddIngredient}
         >
           Add
@@ -89,27 +95,35 @@ const IngredientForm = ({
       </div>
 
       {ingredients.length > 0 && (
-        <div className="w-full max-w-2xl mt-8 mx-auto">
+        <div className="w-full max-w-2xl mt-8 mx-auto bg-gray-50 shadow-md rounded-2xl p-8">
           <h2 className="text-2xl">Ingredients</h2>
 
-          <div className="flex flex-col justify-center border border-gray-300 mt-4">
+          <div className="flex flex-col justify-center mt-4">
             {ingredients.length > 0 &&
-              ingredients.map((ingredient, index) => (
-                <div
-                  className="flex justify-between items-center border border-gray-300 p-3"
-                  key={index}
-                >
-                  {ingredient}
-                  <CloseIcon
-                    className="w-8 h-8 hover:text-white hover:bg-text transition-color duration-150 rounded-lg cursor-pointer p-2"
-                    onClick={() => handleRemoveIngredient(index)}
-                  />
-                </div>
-              ))}
+              ingredients.map((ingredient, index) => {
+                const isFirst = index === 0;
+                const isLast = index === ingredients.length - 1;
+
+                return (
+                  <div
+                    className={`flex justify-between items-center border-2 border-gray-300 p-3 
+                                ${!isFirst ? "border-t-0" : ""} 
+                                ${isFirst ? "rounded-t-xl" : ""} 
+                                ${isLast ? "rounded-b-xl" : ""}`}
+                    key={index}
+                  >
+                    {ingredient}
+                    <CloseIcon
+                      className="w-8 h-8 hover:text-white hover:bg-text transition-color duration-200 rounded-lg cursor-pointer p-2"
+                      onClick={() => handleRemoveIngredient(index)}
+                    />
+                  </div>
+                );
+              })}
           </div>
 
           <button
-            className="w-full bg-text text-background rounded-4xl disabled:hidden cursor-pointer mt-8 p-2"
+            className="w-full bg-text text-background hover:bg-stone-700 transition-color duration-200 rounded-4xl disabled:hidden cursor-pointer mt-8 p-2"
             disabled={ingredients.length === 0}
             onClick={handleGenerate}
           >
